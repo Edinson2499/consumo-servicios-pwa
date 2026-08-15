@@ -16,7 +16,7 @@ test.describe('Pruebas de penetración básicas', () => {
 
     const alertCount = await page.evaluate(() => window.__alertTriggered || 0);
     expect(alertCount).toBe(0);
-    await expect(page.locator('#toast-container')).toBeVisible();
+    await expect(page.locator('#loginScreen')).toBeVisible();
   });
 
   test('no debe exponer rutas internas en consola ni URLs privadas', async ({ page }) => {
