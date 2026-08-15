@@ -639,6 +639,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('PWA: beforeinstallprompt fired', e);
     e.preventDefault();
     deferredPrompt = e;
     if (installBtn) installBtn.hidden = false;
@@ -647,7 +648,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
-      deferredPrompt.prompt();
+        console.log('PWA: showing install prompt');
+        deferredPrompt.prompt();
       try {
         const choice = await deferredPrompt.userChoice;
         console.log('Resultado:', choice.outcome);
