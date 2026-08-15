@@ -92,6 +92,14 @@ async function login(event) {
     showToast('Ingresa la contraseña', { type: 'warning' }); return;
   }
 
+  // Sanitización contra XSS: validar que no contengan HTML/script tags
+  if (email.includes('<') || email.includes('>') || email.includes('"') || email.includes("'")) {
+    showToast('El correo contiene caracteres no permitidos', { type: 'error' }); return;
+  }
+  if (password.includes('<') || password.includes('>')) {
+    showToast('La contraseña contiene caracteres no permitidos', { type: 'error' }); return;
+  }
+
   // Firebase Auth
   const FB_AUTH = fbAuth();
   if (isFbConfigured() && FB_AUTH) {
