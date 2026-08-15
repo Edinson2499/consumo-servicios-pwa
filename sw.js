@@ -1,23 +1,18 @@
-const CACHE_NAME = 'consumo-pwa-v4';
+const CACHE_NAME = 'consumo-pwa-v5';
 const ASSETS = [
   './',
   './index.html',
-  '/manifest.json',
+  './manifest.json',
   './css/estilos.css',
   './js/app.js',
   './js/auth.js',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/icon-maskable-192.png',
-  '/icons/icon-maskable-512.png',
   './js/firebase-data.js',
   './js/firebase-config.js',
   './data/datos.json',
-  './manifest.json',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/icon-maskable-192.png',
+  './icons/icon-maskable-512.png'
 ];
 
 self.addEventListener('install', event => {
