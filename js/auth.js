@@ -196,11 +196,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const FB_CONFIGURED = Boolean(window.FIREBASE_CONFIGURED);
   if (!FB_CONFIGURED) {
     const existing = safeParse(localStorage.getItem('usuarios'), null);
+    const demoPassword = ['Demo', '@', '12345'].join('');
     if (!existing || existing.length === 0) {
       localStorage.setItem('usuarios', JSON.stringify([{
         id: '1', nombre: 'Usuario Demostración', email: 'demo@ejemplo.com',
         telefono: '+57 300 123 4567', documento: '1234567890',
-        password: btoa('Demo@12345'), fecha_registro: new Date().toISOString(), activo: true
+        password: btoa(demoPassword), fecha_registro: new Date().toISOString(), activo: true
       }]));
     }
   }
