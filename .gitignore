@@ -11,3 +11,8 @@ Thumbs.db
 
 # Node modules (si aplica)
 node_modules/
+
+# QA / Playwright artifacts
+playwright-report/
+test-results/
+reports/
