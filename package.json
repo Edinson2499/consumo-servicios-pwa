@@ -1,0 +1,22 @@
+{
+  "name": "consumo-servicios-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:funcional": "playwright test tests/funcional.spec.js",
+    "test:integracion": "playwright test tests/integracion.spec.js",
+    "test:seguridad": "playwright test tests/seguridad.spec.js",
+    "test:rendimiento": "playwright test tests/performance.spec.js",
+    "test:accesibilidad": "playwright test tests/accessibility.spec.js",
+    "test:penetracion": "playwright test tests/penetracion.spec.js",
+    "test:firebase:mock": "playwright test tests/firebase-mock.spec.js",
+    "test:owasp-zap": "pwsh -File scripts/owasp-zap.ps1",
+    "test:qa": "playwright test tests/funcional.spec.js tests/integracion.spec.js tests/seguridad.spec.js tests/performance.spec.js tests/accessibility.spec.js tests/penetracion.spec.js tests/firebase-mock.spec.js"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.54.2"
+  }
+}
