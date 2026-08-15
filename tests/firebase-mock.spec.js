@@ -29,16 +29,14 @@ test.describe('Pruebas con Firebase mockeado', () => {
         }],
       };
 
-      window.__FIREBASE_CONFIG__ = { projectId: 'demo-mock-project' };
-      window.FIREBASE_CONFIGURED = true;
-      window.auth = {
+      const mockAuth = {
         currentUser: { uid: 'mock-user-1', email: 'mock@ejemplo.com' },
         onAuthStateChanged: (cb) => cb({ uid: 'mock-user-1', email: 'mock@ejemplo.com' }),
         signInWithEmailAndPassword: async () => ({ user: { uid: 'mock-user-1', email: 'mock@ejemplo.com' } }),
         signOut: async () => true,
       };
 
-      window.db = {
+      const mockDb = {
         collection: (name) => ({
           doc: (id) => ({
             get: async () => ({ exists: name === 'users', data: () => ({ perfil: state.perfil }) }),
@@ -47,6 +45,11 @@ test.describe('Pruebas con Firebase mockeado', () => {
               return true;
             },
             collection: (sub) => ({
+              orderBy: () => ({
+                get: async () => ({
+                  forEach: (cb) => state.facturas.forEach((item) => cb({ id: item.id, data: () => item })),
+                }),
+              }),
               get: async () => ({
                 forEach: (cb) => state.facturas.forEach((item) => cb({ id: item.id, data: () => item })),
               }),
@@ -68,6 +71,15 @@ test.describe('Pruebas con Firebase mockeado', () => {
           }),
         }),
       };
+
+      window.__FIREBASE_CONFIG__ = { apiKey: 'mock-api-key', projectId: 'demo-mock-project' };
+      window.firebase = {
+        initializeApp: () => ({}),
+        auth: () => mockAuth,
+        firestore: () => mockDb,
+      };
+      window.auth = mockAuth;
+      window.db = mockDb;
     });
 
     await page.goto('/');

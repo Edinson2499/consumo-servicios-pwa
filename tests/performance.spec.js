@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Pruebas de rendimiento', () => {
   test('la página principal debe cargar dentro de umbrales razonables', async ({ page }) => {
-    const metrics = await page.goto('/');
+    await page.goto('/');
 
     const navigation = await page.evaluate(() => {
       const entries = performance.getEntriesByType('navigation');
@@ -14,12 +14,14 @@ test.describe('Pruebas de rendimiento', () => {
       };
     });
 
-    expect(metrics.domContentLoaded).toBeLessThan(2500);
-    expect(metrics.load).toBeLessThan(4000);
+    expect(navigation.domContentLoaded).toBeLessThan(2500);
+    expect(navigation.load).toBeLessThan(4000);
     expect(page.locator('#loginScreen')).toBeVisible();
   });
 
   test('no debe haber demasiados recursos bloqueantes en la carga inicial', async ({ page }) => {
+    await page.goto('/');
+
     const resourceTimes = await page.evaluate(() => {
       const entries = performance.getEntriesByType('resource');
       return {

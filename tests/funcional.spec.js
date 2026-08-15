@@ -12,7 +12,7 @@ test.describe('Pruebas funcionales', () => {
     await page.getByRole('button', { name: /entrar/i }).click();
 
     await expect(page.locator('#dashboard')).toBeVisible();
-    await expect(page.locator('text=Dashboard')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
   });
 
   test('el enlace de registro debe navegar a la página de creación de cuenta', async ({ page }) => {
@@ -26,7 +26,7 @@ test.describe('Pruebas funcionales', () => {
     const input = page.locator('#password');
     await expect(input).toHaveAttribute('type', 'password');
 
-    await page.locator('#eye-icon-login').click();
+    await page.locator('#toggle-password-login').click();
     await expect(input).toHaveAttribute('type', 'text');
   });
 });
