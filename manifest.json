@@ -9,6 +9,16 @@
   "background_color": "#ffffff",
   "icons": [
     {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
       "src": "icons/icon-192.svg",
       "sizes": "192x192",
       "type": "image/svg+xml"
@@ -17,35 +27,6 @@
       "src": "icons/icon-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml"
-    },
-    {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS0xYkAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
-      bWFnZVJlYWR5ccllPAAABb9JREFUeNrs3Y1y2kAQBuA7/3y7Z7sQ8m0k2rWQw0U+Q2cB8q8h6kV2
-      LkXgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2
-      cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2c
-      VgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cV
-      gG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVg
-      G2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVg
-      G2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVg
-      G2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVg
-      G2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVg
-      G2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgAAAABJRU5ErkJggg==",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAGXRFWHRTb2Z0d2Fy
-      ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAD0pJREFUeNrs3dENgkAMBEGv7/5y7sQ8m0k2rWQw0U+
-      Q2cB8q8h6kV2LkXgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cV
-      gG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cV
-      gG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2c
-      VgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2
-      cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2
-      cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2
-      cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2
-      cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgG2cVgAAABJRU5ErkJggg==",
-      "sizes": "512x512",
-      "type": "image/png"
     }
   ]
 }
