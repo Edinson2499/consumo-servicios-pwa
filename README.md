@@ -147,6 +147,32 @@ Desde tu navegador:
 2. **Safari iOS**: Toca Compartir → Agregar a Pantalla de Inicio
 3. **Firefox Android**: Presiona el ícono de menú → Instalar
 
+## 📦 PWA (Instalable)
+
+Se ha agregado soporte PWA para que la aplicación pueda instalarse y funcionar en modo offline parcial mediante un Service Worker.
+
+- Archivos añadidos / modificados:
+       - `manifest.json` — metadatos de la app (nombre, icons, `start_url`, `scope`).
+       - `sw.js` — Service Worker simple que cachea recursos para un modo offline básico.
+       - `icons/` — iconos SVG/PNG utilizados por el `manifest`.
+       - `index.html`, `registro.html`, `registrar.html` — ahora incluyen `link rel="manifest"`.
+       - `js/app.js` — registra el Service Worker y maneja el evento `beforeinstallprompt` mostrando un botón `⬇ Instalar aplicación` en el header cuando procede.
+
+- Cómo probar localmente:
+       - Sirve el proyecto en `localhost` (Chrome permite PWA desde `http://localhost`).
+              ```bash
+              cd consumo-servicios-pwa
+              python -m http.server 8000
+              # o usa Live Server en VS Code
+              ```
+       - Abre `http://localhost:8000` y espera el prompt de instalación o haz clic en el botón "⬇ Instalar aplicación" si aparece en el header.
+
+- Nota sobre HTTPS / Producción:
+       - La instalación PWA en producción requiere HTTPS. El proyecto está listo para desplegar en GitHub Pages (HTTPS):
+              https://shadowfiend2504.github.io/consumo-servicios-pwa/
+
+Si quieres, puedo generar iconos PNG reales y actualizar el `manifest.json` para apuntar a ellos.
+
 ## 🐛 Solución de Problemas
 
 ### Firebase no inicializa

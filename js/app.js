@@ -629,4 +629,37 @@ async function initDashboard(){ updateUserInfo(); await showSection('inicio'); }
 document.addEventListener('DOMContentLoaded',()=>{
   const d=document.getElementById('dashboard');
   if(d && d.style.display!=='none') initDashboard();
+  // --- PWA: register service worker and handle beforeinstallprompt ---
+  const installBtn = document.getElementById('installBtn');
+  let deferredPrompt = null;
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(() => {
+      console.log('Service Worker registrado');
+    }).catch(err => console.warn('SW registro falló:', err));
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) installBtn.hidden = false;
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try {
+        const choice = await deferredPrompt.userChoice;
+        console.log('Resultado:', choice.outcome);
+      } catch (e) { console.warn('No se pudo mostrar prompt:', e); }
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    if (installBtn) installBtn.hidden = true;
+    console.log('App instalada');
+  });
 });
