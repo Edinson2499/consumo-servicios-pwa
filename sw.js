@@ -1,10 +1,15 @@
-const CACHE_NAME = 'consumo-pwa-v2';
+const CACHE_NAME = 'consumo-pwa-v4';
 const ASSETS = [
   './',
   './index.html',
+  '/manifest.json',
   './css/estilos.css',
   './js/app.js',
   './js/auth.js',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/icons/icon-maskable-192.png',
+  '/icons/icon-maskable-512.png',
   './js/firebase-data.js',
   './js/firebase-config.js',
   './data/datos.json',
