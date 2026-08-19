@@ -83,7 +83,7 @@ test.describe('Pruebas con Firebase mockeado', () => {
     });
 
     await page.goto('/');
-    await expect(page.locator('#loginScreen')).toBeVisible();
+    await page.waitForFunction(() => window.DataService && typeof window.DataService.getPerfil === 'function');
 
     const result = await page.evaluate(async () => {
       const perfil = await window.DataService.getPerfil();

@@ -90,9 +90,10 @@ const DataService = {
 
     // ===================== PERFIL =====================
     async getPerfil() {
-        if (this._isFirebase()) {
+        const fbDb = this._fbDb();
+        if (this._isFirebase() && fbDb) {
             try {
-                const doc = await db.collection('users').doc(this._getUid()).get();
+                const doc = await fbDb.collection('users').doc(this._getUid()).get();
                 if (doc.exists && doc.data().perfil) return this._normalizePerfil(doc.data().perfil);
             } catch (e) { console.warn('Firestore getPerfil error:', e); }
         }
@@ -111,9 +112,10 @@ const DataService = {
 
     // ===================== FACTURAS =====================
     async getFacturas() {
-        if (this._isFirebase()) {
+        const fbDb = this._fbDb();
+        if (this._isFirebase() && fbDb) {
             try {
-                const snap = await db.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
+                const snap = await fbDb.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
                 const list = [];
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('facturas', JSON.stringify(list));
@@ -210,22 +212,23 @@ const DataService = {
 
     // ===================== SYNC =====================
     async syncFromFirestore() {
-        if (!this._isFirebase()) return;
+        const fbDb = this._fbDb();
+        if (!this._isFirebase() || !fbDb) return;
         try {
             // Sync perfil
-            const userDoc = await db.collection('users').doc(this._getUid()).get();
+            const userDoc = await fbDb.collection('users').doc(this._getUid()).get();
             if (userDoc.exists && userDoc.data().perfil) {
                 localStorage.setItem('perfil', JSON.stringify(this._normalizePerfil(userDoc.data().perfil)));
             } else {
                 localStorage.setItem('perfil', JSON.stringify(this._defaultPerfil()));
             }
             // Sync facturas
-            const factSnap = await db.collection('users').doc(this._getUid()).collection('facturas').get();
+            const factSnap = await fbDb.collection('users').doc(this._getUid()).collection('facturas').get();
             const facturas = [];
             factSnap.forEach(d => facturas.push({ id: d.id, ...d.data() }));
             localStorage.setItem('facturas', JSON.stringify(facturas));
             // Sync alertas
-            const alertSnap = await db.collection('users').doc(this._getUid()).collection('alertas').get();
+            const alertSnap = await fbDb.collection('users').doc(this._getUid()).collection('alertas').get();
             const alertas = [];
             alertSnap.forEach(d => alertas.push({ id: d.id, ...d.data() }));
             localStorage.setItem('alertas', JSON.stringify(alertas));
