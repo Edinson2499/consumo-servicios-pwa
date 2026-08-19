@@ -22,7 +22,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
@@ -47,10 +47,20 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Start app locally
-        run: python3 -m http.server 4173 &
+        run: |
+          python3 -m http.server 4173 >/tmp/pwa-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:4173/index.html >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not start in time" >&2
+          cat /tmp/pwa-http.log || true
+          exit 1
 
       - name: Run OWASP ZAP baseline scan
         run: |

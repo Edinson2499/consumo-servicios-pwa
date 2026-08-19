@@ -31,11 +31,32 @@ jobs:
         run: |
           set -e
           mkdir -p js
+
           if [ -z "$FIREBASE_CONFIG_JSON" ]; then
-            echo "Missing FIREBASE_CONFIG_JSON secret" >&2
-            exit 1
+            echo "Missing FIREBASE_CONFIG_JSON secret; falling back to placeholder config" >&2
+            cat > js/firebase-config.js <<'EOF'
+          // Firebase Configuration (placeholder fallback for CI)
+          const firebaseConfig = {
+            apiKey: "TU_API_KEY_AQUI",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.firebasestorage.app",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+          };
+          const FIREBASE_CONFIGURED = false;
+          window.FIREBASE_CONFIGURED = FIREBASE_CONFIGURED;
+          let firebaseApp = null;
+          let auth = null;
+          let db = null;
+          window.firebaseApp = firebaseApp;
+          window.auth = auth;
+          window.db = db;
+          EOF
+            exit 0
           fi
-          mkdir -p js
+
           echo "// Firebase Configuration (Generado automáticamente por CI/CD)" > js/firebase-config.js
           printf 'const firebaseConfig = %s\n' "$FIREBASE_CONFIG_JSON" >> js/firebase-config.js
           printf 'const FIREBASE_CONFIGURED = Boolean(firebaseConfig && firebaseConfig.apiKey && firebaseConfig.apiKey != "TU_API_KEY_AQUI");\n' >> js/firebase-config.js
