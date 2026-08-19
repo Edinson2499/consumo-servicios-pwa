@@ -31,7 +31,7 @@ test.describe('Pruebas con Firebase mockeado', () => {
 
       const mockAuth = {
         currentUser: { uid: 'mock-user-1', email: 'mock@ejemplo.com' },
-        onAuthStateChanged: (cb) => cb({ uid: 'mock-user-1', email: 'mock@ejemplo.com' }),
+        onAuthStateChanged: (cb) => { cb(null); return () => {}; },
         signInWithEmailAndPassword: async () => ({ user: { uid: 'mock-user-1', email: 'mock@ejemplo.com' } }),
         signOut: async () => true,
       };
