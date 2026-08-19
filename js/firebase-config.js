@@ -33,7 +33,7 @@ if (FIREBASE_CONFIGURED) {
     try {
         firebaseApp = firebase.initializeApp(firebaseConfig);
         auth = firebase.auth();
-        db = firebase.firestore();
+        db = window.db || firebase.firestore();
         // reflect globals
         window.firebaseApp = firebaseApp;
         window.auth = auth;
