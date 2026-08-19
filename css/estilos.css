@@ -462,13 +462,13 @@ html, body {
 
 .btn-outline-primary {
   background: transparent;
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
+  border: 1.5px solid var(--primary-light);
+  color: var(--primary-light);
 }
 
 .btn-outline-primary:hover {
-  background: var(--accent-glow);
-  color: var(--accent);
+  background: var(--primary-light);
+  color: #ffffff;
 }
 
 .btn-sm { padding: 6px 12px; font-size: 13px; }

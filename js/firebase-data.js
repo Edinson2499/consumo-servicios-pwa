@@ -92,7 +92,8 @@ const DataService = {
     async getPerfil() {
         if (this._isFirebase()) {
             try {
-                const doc = await db.collection('users').doc(this._getUid()).get();
+                const fbDb = this._fbDb();
+                const doc = await fbDb.collection('users').doc(this._getUid()).get();
                 if (doc.exists && doc.data().perfil) return this._normalizePerfil(doc.data().perfil);
             } catch (e) { console.warn('Firestore getPerfil error:', e); }
         }
@@ -113,7 +114,8 @@ const DataService = {
     async getFacturas() {
         if (this._isFirebase()) {
             try {
-                const snap = await db.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
+                const fbDb = this._fbDb();
+                const snap = await fbDb.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
                 const list = [];
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('facturas', JSON.stringify(list));
