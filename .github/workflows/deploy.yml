@@ -32,8 +32,8 @@ jobs:
           set -e
           mkdir -p js
           if [ -z "$FIREBASE_CONFIG_JSON" ]; then
-            echo "Missing FIREBASE_CONFIG_JSON secret" >&2
-            exit 1
+            echo "FIREBASE_CONFIG_JSON is not set. Using repository default js/firebase-config.js."
+            exit 0
           fi
           mkdir -p js
           echo "// Firebase Configuration (Generado automáticamente por CI/CD)" > js/firebase-config.js
