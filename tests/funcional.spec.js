@@ -28,7 +28,7 @@ test.describe('Pruebas funcionales', () => {
     const input = page.locator('#password');
     await expect(input).toHaveAttribute('type', 'password');
 
-    await page.locator('#eye-icon-login').click();
+    await page.locator('#toggle-password-login').click();
     await expect(input).toHaveAttribute('type', 'text');
   });
 

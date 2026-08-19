@@ -14,14 +14,13 @@ test.describe('Pruebas de rendimiento', () => {
       };
     });
 
-    expect(navigation.domContentLoaded).toBeLessThan(3500);
+    expect(navigation.domContentLoaded).toBeLessThan(2500);
     expect(navigation.load).toBeLessThan(4000);
     expect(page.locator('#loginScreen')).toBeVisible();
   });
 
   test('no debe haber demasiados recursos bloqueantes en la carga inicial', async ({ page }) => {
     await page.goto('/');
-    await page.waitForTimeout(1000);
 
     const resourceTimes = await page.evaluate(() => {
       const entries = performance.getEntriesByType('resource');

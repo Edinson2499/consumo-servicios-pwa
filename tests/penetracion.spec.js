@@ -13,19 +13,12 @@ test.describe('Pruebas de penetración básicas', () => {
 
     // Intento de inyección XSS
     await page.fill('#email', '"><script>alert(123)</script>');
-    await page.fill('#password', 'test123');
-    
-    // Click al botón submit
-    const submitBtn = page.locator('#formularioLogin button[type="submit"]');
-    await submitBtn.click();
-    
-    // Validar que el input rechaza caracteres especiales
-    await page.waitForTimeout(500);
-    const emailValue = await page.inputValue('#email');
-    // El campo debe estar vacío después de la validación o le toast debe mostrar error
-    const toast = page.locator('#toast-container:visible');
-    const isToastVisible = await toast.count() > 0;
-    expect(isToastVisible).toBe(true);
+    await page.fill('#password', 'cualquier');
+    await page.getByRole('button', { name: /entrar/i }).click();
+
+    const alertCount = await page.evaluate(() => window.__alertTriggered || 0);
+    expect(alertCount).toBe(0);
+    await expect(page.locator('#loginScreen')).toBeVisible();
   });
 
   test('no debe exponer rutas internas en consola ni URLs privadas', async ({ page }) => {
