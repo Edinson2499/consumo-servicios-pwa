@@ -23,9 +23,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
       - name: Prepare site
         shell: bash
         env:
