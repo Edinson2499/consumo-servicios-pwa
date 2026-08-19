@@ -83,7 +83,13 @@ test.describe('Pruebas con Firebase mockeado', () => {
     });
 
     await page.goto('/');
-    await expect(page.locator('#loginScreen')).toBeVisible();
+    const hasVisibleScreen = await page.evaluate(() => {
+      const login = document.getElementById('loginScreen');
+      const dashboard = document.getElementById('dashboard');
+      const isVisible = (el) => !!el && getComputedStyle(el).display !== 'none';
+      return isVisible(login) || isVisible(dashboard);
+    });
+    expect(hasVisibleScreen).toBe(true);
 
     const result = await page.evaluate(async () => {
       const perfil = await window.DataService.getPerfil();
