@@ -24,7 +24,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check Pages availability
+        id: pages_availability
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          response_file="$(mktemp)"
+          status_code="$(curl -sS -o "$response_file" -w '%{http_code}' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPOSITORY/pages")"
+
+          if [ "$status_code" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$status_code" = "404" ]; then
+            echo "GitHub Pages is not enabled for $REPOSITORY; skipping deployment."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Unexpected status while checking GitHub Pages availability: $status_code" >&2
+          cat "$response_file" >&2
+          exit 1
+
       - name: Create js/firebase-config.js from secret
+        if: steps.pages_availability.outputs.enabled == 'true'
         shell: bash
         env:
           FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
@@ -45,13 +75,16 @@ jobs:
           printf 'if (FIREBASE_CONFIGURED) { try { firebaseApp = firebase.initializeApp(firebaseConfig); auth = firebase.auth(); db = firebase.firestore(); window.firebaseApp = firebaseApp; window.auth = auth; window.db = db; console.log("✅ Firebase inicializado correctamente"); } catch (e) { console.warn("⚠️ Error al inicializar Firebase:", e); } } else { console.log("ℹ️ Firebase no configurado — usando localStorage como fallback"); }\n' >> js/firebase-config.js
 
       - name: Setup Pages
+        if: steps.pages_availability.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
+        if: steps.pages_availability.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: '.'
 
       - name: Deploy to GitHub Pages
+        if: steps.pages_availability.outputs.enabled == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
