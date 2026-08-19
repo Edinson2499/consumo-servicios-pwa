@@ -31,4 +31,16 @@ test.describe('Pruebas funcionales', () => {
     await page.locator('#eye-icon-login').click();
     await expect(input).toHaveAttribute('type', 'text');
   });
+
+  test('debe abrir y enviar la solicitud de recuperación de contraseña', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('button', { name: /olvidé mi contraseña/i }).click();
+    await expect(page.locator('#recoverPasswordModal')).toBeVisible();
+
+    await page.fill('#recoverEmail', 'demo@ejemplo.com');
+    await page.getByRole('button', { name: /enviar enlace/i }).click();
+
+    await expect(page.locator('#toast-container')).toContainText(/enlace|recuperación|correo/i);
+  });
 });
