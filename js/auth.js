@@ -108,7 +108,6 @@ async function login(event) {
       showToast('¡Bienvenido! Accediendo...', { type: 'success', delay: 1500 });
       // onAuthStateChanged manejará el resto
     } catch (err) {
-      console.error('Firebase login error:', err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
         showToast('Correo o contraseña incorrectos', { type: 'warning' });
       } else if (err.code === 'auth/too-many-requests') {
@@ -135,7 +134,6 @@ async function login(event) {
     setTimeout(() => showDashboard(), 500);
   } catch (e) {
     showToast('Error al iniciar sesión', { type: 'error' });
-    console.error(e);
   }
 }
 
@@ -160,7 +158,7 @@ async function logout() {
     showLogin();
     showToast('Sesión cerrada', { type: 'info' });
   } catch (e) {
-    console.error('Logout error:', e);
+    showToast('No se pudo cerrar la sesión', { type: 'error' });
   }
 }
 
