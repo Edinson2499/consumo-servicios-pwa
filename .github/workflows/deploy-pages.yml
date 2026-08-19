@@ -19,14 +19,47 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages_availability.outputs.enabled }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Check Pages availability
+        id: pages_availability
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          response_file="$(mktemp)"
+          status_code="$(curl -sS -o "$response_file" -w '%{http_code}' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPOSITORY/pages")"
+
+          if [ "$status_code" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "$status_code" = "404" ]; then
+            echo "GitHub Pages is not enabled for $REPOSITORY; skipping Pages artifact preparation."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Unexpected status while checking GitHub Pages availability: $status_code" >&2
+          cat "$response_file" >&2
+          exit 1
+
       - name: Configure Pages
+        if: steps.pages_availability.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
 
       - name: Prepare site
+        if: steps.pages_availability.outputs.enabled == 'true'
         shell: bash
         env:
           FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
@@ -70,11 +103,13 @@ jobs:
           NODE
 
       - name: Upload artifact
+        if: steps.pages_availability.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
   deploy:
+    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
