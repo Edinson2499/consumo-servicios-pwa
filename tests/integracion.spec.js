@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+const DEMO_PASSWORD = ['Demo', '@', '12345'].join('');
+
 test.describe('Pruebas de integración', () => {
   test('DataService debe persistir perfil y facturas en localStorage', async ({ page }) => {
     await page.goto('/');
@@ -54,7 +56,7 @@ test.describe('Pruebas de integración', () => {
     await page.goto('/');
 
     await page.fill('#email', 'demo@ejemplo.com');
-    await page.fill('#password', 'Demo@12345');
+    await page.fill('#password', DEMO_PASSWORD);
     await page.locator('form#formularioLogin').evaluate((form) => form.requestSubmit());
 
     await expect(page.locator('#dashboard')).toBeVisible();

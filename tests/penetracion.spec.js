@@ -9,7 +9,9 @@ test.describe('Pruebas de penetración básicas', () => {
 
   test('debe neutralizar payload malicioso en el login sin ejecutar scripts', async ({ page }) => {
     await page.goto('/');
+    await page.waitForTimeout(500);
 
+    // Intento de inyección XSS
     await page.fill('#email', '"><script>alert(123)</script>');
     await page.fill('#password', 'cualquier');
     await page.getByRole('button', { name: /entrar/i }).click();

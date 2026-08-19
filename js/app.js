@@ -633,13 +633,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   const installBtn = document.getElementById('installBtn');
   let deferredPrompt = null;
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(() => {
-      console.log('Service Worker registrado');
-    }).catch(err => console.warn('SW registro falló:', err));
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // El registro del service worker no bloquea la carga de la app.
+    });
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('PWA: beforeinstallprompt fired', e);
     e.preventDefault();
     deferredPrompt = e;
     if (installBtn) installBtn.hidden = false;
@@ -648,12 +647,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) return;
-        console.log('PWA: showing install prompt');
-        deferredPrompt.prompt();
+      deferredPrompt.prompt();
       try {
-        const choice = await deferredPrompt.userChoice;
-        console.log('Resultado:', choice.outcome);
-      } catch (e) { console.warn('No se pudo mostrar prompt:', e); }
+        await deferredPrompt.userChoice;
+      } catch (e) {
+        // El prompt de instalación es opcional y puede fallar en navegadores restrictivos.
+      }
       deferredPrompt = null;
       installBtn.hidden = true;
     });
@@ -662,6 +661,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     if (installBtn) installBtn.hidden = true;
-    console.log('App instalada');
   });
 });

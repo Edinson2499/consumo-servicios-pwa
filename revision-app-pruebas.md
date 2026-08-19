@@ -75,7 +75,7 @@ El patrón general usa `localStorage` como fallback y guarda datos con estructur
 ### 5.3 Buenas prácticas observadas
 
 - uso de `localStorage` para persistencia offline
-- soporte de login demo (`demo@ejemplo.com / Demo@12345`)
+- soporte de login demo (`demo@ejemplo.com / contraseña de prueba`)
 - separación lógica por capas (auth, data, app)
 - presencia de `manifest.json` y `sw.js` para PWA
 - soporte para Firebase y configuración externalizada
@@ -197,7 +197,7 @@ Objetivo:
 
 ### Caso 1 — Login correcto
 
-- Entrada: correo `demo@ejemplo.com`, contraseña `Demo@12345`
+- Entrada: correo `demo@ejemplo.com`, contraseña `contraseña de prueba`
 - Resultado esperado: acceso al dashboard
 - Estado: definido y preparado en pruebas automatizadas
 

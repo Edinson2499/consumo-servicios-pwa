@@ -94,7 +94,9 @@ const DataService = {
             try {
                 const doc = await db.collection('users').doc(this._getUid()).get();
                 if (doc.exists && doc.data().perfil) return this._normalizePerfil(doc.data().perfil);
-            } catch (e) { console.warn('Firestore getPerfil error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
         return this._normalizePerfil(this._safeParse(localStorage.getItem('perfil'), null));
     },
@@ -105,7 +107,9 @@ const DataService = {
         if (this._isFirebase()) {
             try {
                 await db.collection('users').doc(this._getUid()).set({ perfil: normalized }, { merge: true });
-            } catch (e) { console.warn('Firestore savePerfil error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -118,7 +122,9 @@ const DataService = {
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('facturas', JSON.stringify(list));
                 return list;
-            } catch (e) { console.warn('Firestore getFacturas error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
         return this._safeParse(localStorage.getItem('facturas'), []);
     },
@@ -132,7 +138,9 @@ const DataService = {
         if (this._isFirebase()) {
             try {
                 await db.collection('users').doc(this._getUid()).collection('facturas').doc(factura.id).set(factura);
-            } catch (e) { console.warn('Firestore saveFactura error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -142,7 +150,9 @@ const DataService = {
         if (this._isFirebase()) {
             try {
                 await db.collection('users').doc(this._getUid()).collection('facturas').doc(id).delete();
-            } catch (e) { console.warn('Firestore deleteFactura error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -153,7 +163,9 @@ const DataService = {
         if (this._isFirebase()) {
             try {
                 await db.collection('users').doc(this._getUid()).collection('facturas').doc(id).update(data);
-            } catch (e) { console.warn('Firestore updateFactura error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -166,7 +178,9 @@ const DataService = {
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('alertas', JSON.stringify(list));
                 return list;
-            } catch (e) { console.warn('Firestore getAlertas error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
         return this._safeParse(localStorage.getItem('alertas'), []);
     },
@@ -179,7 +193,9 @@ const DataService = {
             try {
                 const docId = alerta._key || ('ALR-' + Date.now());
                 await db.collection('users').doc(this._getUid()).collection('alertas').doc(docId).set(alerta);
-            } catch (e) { console.warn('Firestore saveAlerta error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -191,7 +207,9 @@ const DataService = {
             if (this._isFirebase() && local[index]._key) {
                 try {
                     await db.collection('users').doc(this._getUid()).collection('alertas').doc(local[index]._key).update(data);
-                } catch (e) { console.warn('Firestore updateAlerta error:', e); }
+                } catch (e) {
+                    // La sincronización con Firestore puede fallar y se recupera con localStorage.
+                }
             }
         }
     },
@@ -204,7 +222,9 @@ const DataService = {
                 const batch = db.batch();
                 snap.forEach(d => batch.delete(d.ref));
                 await batch.commit();
-            } catch (e) { console.warn('Firestore clearAlertas error:', e); }
+            } catch (e) {
+                // La sincronización con Firestore puede fallar y se recupera con localStorage.
+            }
         }
     },
 
@@ -229,7 +249,9 @@ const DataService = {
             const alertas = [];
             alertSnap.forEach(d => alertas.push({ id: d.id, ...d.data() }));
             localStorage.setItem('alertas', JSON.stringify(alertas));
-        } catch (e) { console.warn('Sync error:', e); }
+        } catch (e) {
+            // La sincronización con Firestore puede fallar y se recupera con localStorage.
+        }
     }
 };
 
