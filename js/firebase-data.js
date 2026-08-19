@@ -91,8 +91,9 @@ const DataService = {
     // ===================== PERFIL =====================
     async getPerfil() {
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                const doc = await db.collection('users').doc(this._getUid()).get();
+                const doc = await fbDb.collection('users').doc(this._getUid()).get();
                 if (doc.exists && doc.data().perfil) return this._normalizePerfil(doc.data().perfil);
             } catch (e) { console.warn('Firestore getPerfil error:', e); }
         }
@@ -103,8 +104,9 @@ const DataService = {
         const normalized = this._normalizePerfil(perfil);
         localStorage.setItem('perfil', JSON.stringify(normalized));
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                await db.collection('users').doc(this._getUid()).set({ perfil: normalized }, { merge: true });
+                await fbDb.collection('users').doc(this._getUid()).set({ perfil: normalized }, { merge: true });
             } catch (e) { console.warn('Firestore savePerfil error:', e); }
         }
     },
@@ -112,8 +114,9 @@ const DataService = {
     // ===================== FACTURAS =====================
     async getFacturas() {
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                const snap = await db.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
+                const snap = await fbDb.collection('users').doc(this._getUid()).collection('facturas').orderBy('periodo', 'desc').get();
                 const list = [];
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('facturas', JSON.stringify(list));
@@ -130,8 +133,9 @@ const DataService = {
         localStorage.setItem('facturas', JSON.stringify(local));
         // Firestore
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                await db.collection('users').doc(this._getUid()).collection('facturas').doc(factura.id).set(factura);
+                await fbDb.collection('users').doc(this._getUid()).collection('facturas').doc(factura.id).set(factura);
             } catch (e) { console.warn('Firestore saveFactura error:', e); }
         }
     },
@@ -140,8 +144,9 @@ const DataService = {
         const local = this._safeParse(localStorage.getItem('facturas'), []).filter(f => f.id !== id);
         localStorage.setItem('facturas', JSON.stringify(local));
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                await db.collection('users').doc(this._getUid()).collection('facturas').doc(id).delete();
+                await fbDb.collection('users').doc(this._getUid()).collection('facturas').doc(id).delete();
             } catch (e) { console.warn('Firestore deleteFactura error:', e); }
         }
     },
@@ -151,8 +156,9 @@ const DataService = {
         const idx = local.findIndex(f => f.id === id);
         if (idx !== -1) { Object.assign(local[idx], data); localStorage.setItem('facturas', JSON.stringify(local)); }
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                await db.collection('users').doc(this._getUid()).collection('facturas').doc(id).update(data);
+                await fbDb.collection('users').doc(this._getUid()).collection('facturas').doc(id).update(data);
             } catch (e) { console.warn('Firestore updateFactura error:', e); }
         }
     },
@@ -160,8 +166,9 @@ const DataService = {
     // ===================== ALERTAS =====================
     async getAlertas() {
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                const snap = await db.collection('users').doc(this._getUid()).collection('alertas').orderBy('fecha', 'desc').get();
+                const snap = await fbDb.collection('users').doc(this._getUid()).collection('alertas').orderBy('fecha', 'desc').get();
                 const list = [];
                 snap.forEach(d => list.push({ id: d.id, ...d.data() }));
                 localStorage.setItem('alertas', JSON.stringify(list));
@@ -176,9 +183,10 @@ const DataService = {
         local.push(alerta);
         localStorage.setItem('alertas', JSON.stringify(local));
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
                 const docId = alerta._key || ('ALR-' + Date.now());
-                await db.collection('users').doc(this._getUid()).collection('alertas').doc(docId).set(alerta);
+                await fbDb.collection('users').doc(this._getUid()).collection('alertas').doc(docId).set(alerta);
             } catch (e) { console.warn('Firestore saveAlerta error:', e); }
         }
     },
@@ -189,8 +197,9 @@ const DataService = {
             Object.assign(local[index], data);
             localStorage.setItem('alertas', JSON.stringify(local));
             if (this._isFirebase() && local[index]._key) {
+                const fbDb = this._fbDb();
                 try {
-                    await db.collection('users').doc(this._getUid()).collection('alertas').doc(local[index]._key).update(data);
+                    await fbDb.collection('users').doc(this._getUid()).collection('alertas').doc(local[index]._key).update(data);
                 } catch (e) { console.warn('Firestore updateAlerta error:', e); }
             }
         }
@@ -199,9 +208,10 @@ const DataService = {
     async clearAlertas() {
         localStorage.removeItem('alertas');
         if (this._isFirebase()) {
+            const fbDb = this._fbDb();
             try {
-                const snap = await db.collection('users').doc(this._getUid()).collection('alertas').get();
-                const batch = db.batch();
+                const snap = await fbDb.collection('users').doc(this._getUid()).collection('alertas').get();
+                const batch = fbDb.batch();
                 snap.forEach(d => batch.delete(d.ref));
                 await batch.commit();
             } catch (e) { console.warn('Firestore clearAlertas error:', e); }
@@ -211,21 +221,22 @@ const DataService = {
     // ===================== SYNC =====================
     async syncFromFirestore() {
         if (!this._isFirebase()) return;
+        const fbDb = this._fbDb();
         try {
             // Sync perfil
-            const userDoc = await db.collection('users').doc(this._getUid()).get();
+            const userDoc = await fbDb.collection('users').doc(this._getUid()).get();
             if (userDoc.exists && userDoc.data().perfil) {
                 localStorage.setItem('perfil', JSON.stringify(this._normalizePerfil(userDoc.data().perfil)));
             } else {
                 localStorage.setItem('perfil', JSON.stringify(this._defaultPerfil()));
             }
             // Sync facturas
-            const factSnap = await db.collection('users').doc(this._getUid()).collection('facturas').get();
+            const factSnap = await fbDb.collection('users').doc(this._getUid()).collection('facturas').get();
             const facturas = [];
             factSnap.forEach(d => facturas.push({ id: d.id, ...d.data() }));
             localStorage.setItem('facturas', JSON.stringify(facturas));
             // Sync alertas
-            const alertSnap = await db.collection('users').doc(this._getUid()).collection('alertas').get();
+            const alertSnap = await fbDb.collection('users').doc(this._getUid()).collection('alertas').get();
             const alertas = [];
             alertSnap.forEach(d => alertas.push({ id: d.id, ...d.data() }));
             localStorage.setItem('alertas', JSON.stringify(alertas));
