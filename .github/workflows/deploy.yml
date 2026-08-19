@@ -32,10 +32,9 @@ jobs:
           set -e
           mkdir -p js
           if [ -z "$FIREBASE_CONFIG_JSON" ]; then
-            echo "Missing FIREBASE_CONFIG_JSON secret" >&2
-            exit 1
+            echo "FIREBASE_CONFIG_JSON secret not set — using placeholder config (localStorage fallback will be active)" >&2
+            FIREBASE_CONFIG_JSON='{}'
           fi
-          mkdir -p js
           echo "// Firebase Configuration (Generado automáticamente por CI/CD)" > js/firebase-config.js
           printf 'const firebaseConfig = %s\n' "$FIREBASE_CONFIG_JSON" >> js/firebase-config.js
           printf 'const FIREBASE_CONFIGURED = Boolean(firebaseConfig && firebaseConfig.apiKey && firebaseConfig.apiKey != "TU_API_KEY_AQUI");\n' >> js/firebase-config.js
