@@ -22,8 +22,9 @@
 </head>
 
 <body>
+  <main id="appMain" aria-label="Contenido principal">
   <!-- Pantalla de Login -->
-  <div id="loginScreen" class="login-screen-layout">
+  <section id="loginScreen" class="login-screen-layout" aria-label="Inicio de sesión">
     <div class="login-form-container">
       <div class="login-form-content">
         <div class="text-center mb-4">
@@ -52,8 +53,8 @@
               <input type="password" id="password" class="form-control border-start-0" placeholder="Tu contraseña"
                 required>
               <button class="btn btn-outline-secondary border-start-0" type="button"
-                onclick="togglePasswordVisibilityLogin()">
-                <i class="bi bi-eye" id="eye-icon-login"></i>
+                onclick="togglePasswordVisibilityLogin()" aria-label="Mostrar contraseña" title="Mostrar contraseña">
+                <i class="bi bi-eye" id="eye-icon-login" aria-hidden="true"></i>
               </button>
             </div>
           </div>
@@ -93,7 +94,7 @@
       </div>
     </div>
     <div class="login-image-container"></div>
-  </div>
+  </section>
 
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard" style="display: none;">
@@ -172,7 +173,7 @@
       </aside>
 
       <!-- Main Content -->
-      <main class="main-content">
+      <div class="main-content">
         <div class="content-area">
 
           <!-- Dashboard / Inicio -->
@@ -230,9 +231,10 @@
           </section>
 
         </div>
-      </main>
+      </div>
     </div>
   </div>
+  </main>
 
   <!-- Recuperar Contraseña -->
   <div class="modal fade" id="recoverPasswordModal" tabindex="-1" aria-labelledby="recoverPasswordLabel" aria-hidden="true">
