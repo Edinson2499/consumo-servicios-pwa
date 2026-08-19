@@ -7,9 +7,9 @@
 :root {
   --primary: #0f172a;
   --primary-light: #1e3a5f;
-  --accent: #3b82f6;
+  --accent: #2563eb;
   --accent-light: #60a5fa;
-  --accent-glow: rgba(59, 130, 246, 0.15);
+  --accent-glow: rgba(37, 99, 235, 0.15);
   --bg: #f1f5f9;
   --bg-card: #ffffff;
   --text: #1e293b;

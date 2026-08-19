@@ -7,9 +7,8 @@ test.describe('Cobertura de accesibilidad', () => {
 
     const axeBuilder = new AxeBuilder({ page });
     const results = await axeBuilder.analyze();
-    const criticalViolations = results.violations.filter((violation) => violation.impact === 'critical');
 
-    expect(criticalViolations).toEqual([]);
+    expect(results.violations).toEqual([]);
   });
 
   test('los controles principales deben tener labels o nombres accesibles', async ({ page }) => {
