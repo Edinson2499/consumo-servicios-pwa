@@ -111,6 +111,14 @@ html, body {
 
 .login-form-content input.is-valid { border-color: #22c55e; }
 .login-form-content input.is-invalid { border-color: #ef4444; }
+.login-form-content .btn-outline-primary {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+.login-form-content .btn-outline-primary:hover {
+  background: rgba(29, 78, 216, 0.1);
+  color: #1e40af;
+}
 
 .input-group { margin-bottom: 0.5rem; }
 .input-group .input-group-text { padding: 0.5rem 0.75rem; background-color: #f8fafc; border-color: var(--border); }
