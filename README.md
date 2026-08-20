@@ -87,6 +87,17 @@ Accede a `http://localhost:8000`
 
 **Nunca** commits credenciales reales. Usa `firebase-config.example.js` como template.
 
+### Recuperación de contraseña real (Firebase)
+
+Para que el botón "Olvidé mi contraseña" envíe correos reales:
+
+1. En Firebase Console ve a `Authentication` → `Sign-in method` y habilita `Email/Password`.
+2. En `Authentication` → `Settings` → `Authorized domains`, agrega tu dominio de despliegue y `localhost` para pruebas.
+3. Verifica que `js/firebase-config.js` tenga credenciales válidas (no placeholders).
+4. Opcional: personaliza la plantilla en `Authentication` → `Templates` → `Password reset`.
+
+Si Firebase no está configurado, la app mostrará un error y no simulará envíos por `localStorage`.
+
 En GitHub Pages solo necesitas un secreto:
 
 ```json
