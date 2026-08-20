@@ -30,6 +30,27 @@ function closeRecoverPasswordModal() {
   modalEl.setAttribute('aria-hidden', 'true');
 }
 
+function getResetActionCodeSettings() {
+  const currentUrl = new URL(window.location.href);
+  const path = currentUrl.pathname.replace(/\/[^/]*$/, '/index.html');
+  const resetTargetUrl = `${currentUrl.origin}${path}`;
+  return {
+    url: `${resetTargetUrl}?reset=1`,
+    handleCodeInApp: false
+  };
+}
+
+function getRecoverSubmitButton() {
+  return document.getElementById('recoverPasswordSubmit');
+}
+
+function setRecoverSubmitLoading(isLoading) {
+  const submitBtn = getRecoverSubmitButton();
+  if (!submitBtn) return;
+  submitBtn.disabled = isLoading;
+  submitBtn.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+}
+
 async function recoverPassword(event) {
   if (event) event.preventDefault();
 
@@ -42,41 +63,50 @@ async function recoverPassword(event) {
   }
 
   const fbAuthInstance = typeof fbAuth === 'function' ? fbAuth() : null;
-  if (window.FIREBASE_CONFIGURED && fbAuthInstance) {
-    try {
-      await fbAuthInstance.sendPasswordResetEmail(email);
-      showToast('Te enviamos un enlace para restablecer tu contraseña.', { type: 'success', delay: 4000 });
-      closeRecoverPasswordModal();
-      return;
-    } catch (err) {
-      const code = err && err.code ? err.code : '';
-      if (code === 'auth/user-not-found') {
-        showToast('Si este correo está registrado, recibirás un enlace de recuperación.', { type: 'info', delay: 4000 });
-      } else {
-        showToast('No se pudo enviar el enlace de recuperación.', { type: 'error' });
-      }
-      closeRecoverPasswordModal();
-      return;
-    }
-  }
+  const canSendRealResetEmail = Boolean(
+    window.FIREBASE_CONFIGURED &&
+    fbAuthInstance &&
+    typeof fbAuthInstance.sendPasswordResetEmail === 'function'
+  );
 
-  const usuarios = safeParse(localStorage.getItem('usuarios'), []);
-  const usuario = usuarios.find((u) => String(u.email || '').toLowerCase() === email);
-
-  if (!usuario) {
-    showToast('Si este correo está registrado, recibirás un enlace de recuperación.', { type: 'info', delay: 4000 });
-    closeRecoverPasswordModal();
+  if (!canSendRealResetEmail) {
+    showToast('No se puede enviar un correo real de recuperación. Configura Firebase Auth para habilitar esta función.', { type: 'error', delay: 5000 });
     return;
   }
 
-  localStorage.setItem('resetPasswordRequest', JSON.stringify({
-    email,
-    createdAt: new Date().toISOString(),
-    userId: usuario.id || null
-  }));
+  setRecoverSubmitLoading(true);
+  try {
+    const actionCodeSettings = getResetActionCodeSettings();
+    await fbAuthInstance.sendPasswordResetEmail(email, actionCodeSettings);
 
-  showToast('Se envió un enlace de recuperación al correo registrado.', { type: 'success', delay: 4000 });
-  closeRecoverPasswordModal();
+    // Mensaje genérico para no exponer si el correo existe o no.
+    showToast('Si el correo está registrado, recibirás un enlace de recuperación en unos minutos.', {
+      type: 'success',
+      delay: 5000
+    });
+    closeRecoverPasswordModal();
+  } catch (err) {
+    const code = err && err.code ? err.code : '';
+    if (code === 'auth/invalid-email') {
+      showToast('El formato del correo no es válido.', { type: 'warning' });
+      return;
+    }
+    if (code === 'auth/too-many-requests') {
+      showToast('Demasiadas solicitudes. Intenta de nuevo en unos minutos.', { type: 'warning', delay: 5000 });
+      return;
+    }
+    if (code === 'auth/missing-continue-uri' || code === 'auth/invalid-continue-uri' || code === 'auth/unauthorized-continue-uri') {
+      showToast('No se pudo enviar el correo por configuración de dominio en Firebase.', { type: 'error', delay: 6000 });
+      return;
+    }
+
+    showToast('No se pudo enviar el correo de recuperación. Verifica la configuración de Firebase Auth.', {
+      type: 'error',
+      delay: 6000
+    });
+  } finally {
+    setRecoverSubmitLoading(false);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
