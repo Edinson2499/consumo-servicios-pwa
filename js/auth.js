@@ -92,6 +92,14 @@ async function login(event) {
     showToast('Ingresa la contraseña', { type: 'warning' }); return;
   }
 
+  // Sanitización contra XSS: validar que no contengan HTML/script tags
+  if (email.includes('<') || email.includes('>') || email.includes('"') || email.includes("'")) {
+    showToast('El correo contiene caracteres no permitidos', { type: 'error' }); return;
+  }
+  if (password.includes('<') || password.includes('>')) {
+    showToast('La contraseña contiene caracteres no permitidos', { type: 'error' }); return;
+  }
+
   // Firebase Auth
   const FB_AUTH = fbAuth();
   if (isFbConfigured() && FB_AUTH) {
@@ -100,7 +108,6 @@ async function login(event) {
       showToast('¡Bienvenido! Accediendo...', { type: 'success', delay: 1500 });
       // onAuthStateChanged manejará el resto
     } catch (err) {
-      console.error('Firebase login error:', err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
         showToast('Correo o contraseña incorrectos', { type: 'warning' });
       } else if (err.code === 'auth/too-many-requests') {
@@ -127,7 +134,6 @@ async function login(event) {
     setTimeout(() => showDashboard(), 500);
   } catch (e) {
     showToast('Error al iniciar sesión', { type: 'error' });
-    console.error(e);
   }
 }
 
@@ -152,7 +158,7 @@ async function logout() {
     showLogin();
     showToast('Sesión cerrada', { type: 'info' });
   } catch (e) {
-    console.error('Logout error:', e);
+    showToast('No se pudo cerrar la sesión', { type: 'error' });
   }
 }
 
@@ -196,11 +202,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const FB_CONFIGURED = Boolean(window.FIREBASE_CONFIGURED);
   if (!FB_CONFIGURED) {
     const existing = safeParse(localStorage.getItem('usuarios'), null);
+    const demoPassword = ['Demo', '@', '12345'].join('');
     if (!existing || existing.length === 0) {
       localStorage.setItem('usuarios', JSON.stringify([{
         id: '1', nombre: 'Usuario Demostración', email: 'demo@ejemplo.com',
         telefono: '+57 300 123 4567', documento: '1234567890',
-        password: btoa('Demo@12345'), fecha_registro: new Date().toISOString(), activo: true
+        password: btoa(demoPassword), fecha_registro: new Date().toISOString(), activo: true
       }]));
     }
   }

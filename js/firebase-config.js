@@ -39,6 +39,6 @@ if (FIREBASE_CONFIGURED) {
         window.auth = auth;
         window.db = db;
     } catch (e) {
-        console.warn('⚠️ Error al inicializar Firebase:', e);
+        // La inicialización de Firebase puede fallar sin bloquear la app.
     }
 }
