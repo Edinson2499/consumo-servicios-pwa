@@ -86,10 +86,10 @@ test.describe('Pruebas con Firebase mockeado', () => {
     
     // Validar que la inyección funcionó
     const mockActive = await page.evaluate(() => {
-      return window.mockConfigActive === true && window.__FIREBASE_CONFIG__?.projectId === 'demo-mock-project';
+      return window.FIREBASE_CONFIGURED === true && window.__FIREBASE_CONFIG__?.projectId === 'demo-mock-project';
     });
 
     expect(mockActive).toBe(true);
-    expect(page.locator('#loginScreen')).toBeVisible();
+    await expect(page.locator('#dashboard')).toBeVisible();
   });
 });

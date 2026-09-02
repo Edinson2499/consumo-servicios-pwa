@@ -39,7 +39,7 @@ test.describe('Pruebas funcionales', () => {
     await expect(page.locator('#recoverPasswordModal')).toBeVisible();
 
     await page.fill('#recoverEmail', 'demo@ejemplo.com');
-    await page.getByRole('button', { name: /enviar enlace/i }).click();
+    await page.locator('#recoverPasswordSubmit').click();
 
     await expect(page.locator('#toast-container')).toContainText(/enlace|recuperación|correo/i);
   });
