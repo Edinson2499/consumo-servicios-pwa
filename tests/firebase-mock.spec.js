@@ -73,6 +73,8 @@ test.describe('Pruebas con Firebase mockeado', () => {
       };
 
       window.__FIREBASE_CONFIG__ = { apiKey: 'mock-api-key', projectId: 'demo-mock-project' };
+      window.FIREBASE_CONFIGURED = true;
+      window.mockConfigActive = true;
       window.firebase = {
         initializeApp: () => ({}),
         auth: () => mockAuth,
@@ -86,7 +88,7 @@ test.describe('Pruebas con Firebase mockeado', () => {
     
     // Validar que la inyección funcionó
     const mockActive = await page.evaluate(() => {
-      return window.mockConfigActive === true && window.__FIREBASE_CONFIG__?.projectId === 'demo-mock-project';
+      return window.mockConfigActive === true && window.FIREBASE_CONFIGURED === true && window.__FIREBASE_CONFIG__?.projectId === 'demo-mock-project';
     });
 
     expect(mockActive).toBe(true);
