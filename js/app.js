@@ -237,7 +237,10 @@ async function loadPerfil(c){
             <option value="finca" ${p.tipo==='finca'?'selected':''}>Finca</option>
           </select></div>
         </div>
-        <button class="btn btn-primary mt-4" onclick="guardarPerfil()"><i class="bi bi-check-circle me-1"></i>Guardar Perfil</button>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <button class="btn btn-primary" onclick="guardarPerfil()"><i class="bi bi-check-circle me-1"></i>Guardar Perfil</button>
+          <a href="terminos.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-text me-1"></i>Términos y Condiciones</a>
+        </div>
       </div>
     </div>
     <div class="col-lg-6">
