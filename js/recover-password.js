@@ -1,6 +1,7 @@
 function openRecoverPasswordModal() {
   const modalEl = document.getElementById('recoverPasswordModal');
   if (!modalEl) return;
+  modalEl.removeAttribute('inert');
 
   const emailInput = document.getElementById('recoverEmail');
   if (emailInput) {
@@ -28,6 +29,7 @@ function closeRecoverPasswordModal() {
 
   modalEl.classList.remove('show');
   modalEl.setAttribute('aria-hidden', 'true');
+  modalEl.setAttribute('inert', '');
 }
 
 function getResetActionCodeSettings() {
@@ -127,5 +129,10 @@ document.addEventListener('DOMContentLoaded', function () {
         recoverPassword(event);
       }
     });
+  }
+
+  const recoverPasswordModal = document.getElementById('recoverPasswordModal');
+  if (recoverPasswordModal) {
+    recoverPasswordModal.addEventListener('hidden.bs.modal', () => recoverPasswordModal.setAttribute('inert', ''));
   }
 });

@@ -52,7 +52,7 @@
               <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock"></i></span>
               <input type="password" id="password" class="form-control border-start-0" placeholder="Tu contraseña"
                 required>
-              <button class="btn btn-outline-secondary border-start-0" type="button"
+              <button id="toggle-password-login" class="btn btn-outline-secondary border-start-0" type="button"
                 onclick="togglePasswordVisibilityLogin()" aria-label="Mostrar contraseña" title="Mostrar contraseña">
                 <i class="bi bi-eye" id="eye-icon-login" aria-hidden="true"></i>
               </button>
@@ -237,7 +237,7 @@
   </main>
 
   <!-- Recuperar Contraseña -->
-  <div class="modal fade" id="recoverPasswordModal" tabindex="-1" aria-labelledby="recoverPasswordLabel" aria-hidden="true">
+  <div class="modal fade" id="recoverPasswordModal" tabindex="-1" aria-labelledby="recoverPasswordLabel" aria-hidden="true" inert>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
